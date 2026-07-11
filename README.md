@@ -11,9 +11,10 @@ sed -i 's/channel=.*/channel="debug"/g' /etc/init.d/dropbear
 ```
 
 ## 切换分区
+手动在末尾添加目标分区：0 = /mtd12, 1 = /mtd13
 ```
-nvram set flag_last_success=1
-nvram set flag_boot_rootfs=1
+nvram set flag_last_success=
+nvram set flag_boot_rootfs=
 nvram commit
 reboot
 ```
