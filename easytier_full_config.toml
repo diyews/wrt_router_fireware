@@ -1,0 +1,145 @@
+# EasyTier Configuration File  
+# This file contains all available configuration options with comments  
+# 配置文件包含所有可用配置项及注释  
+ 
+# Instance configuration - 实例配置  
+instance_name = "default"  # Instance name to identify this VPN node in same machine / 实例名称，用于在同一台机器上标识此VPN节点  
+hostname = "my-device"     # Host name to identify this device / 用于标识此设备的主机名  
+ 
+# Network identity - 网络身份  
+[network_identity]  
+network_name = "my-network"        # Network name to identify this VPN network / 用于标识此VPN网络的网络名称  
+network_secret = "my-secret-key"   # Network secret to verify this node belongs to the VPN network / 网络密钥，用于验证此节点属于VPN网络  
+ 
+# IP configuration - IP配置  
+ipv4 = "10.0.0.1"          # IPv4 address of this VPN node / 此VPN节点的IPv4地址  
+ipv6 = "fd00:2021:1111::1" # IPv6 address of this VPN node / 此VPN节点的IPv6地址  
+dhcp = true                 # Automatically determine and set IP address by EasyTier / 由EasyTier自动确定并设置IP地址  
+ 
+# Listeners - 监听器配置  
+listeners = [  
+   "tcp://0.0.0.0:11010",  # TCP listener on port 11010 / 在11010端口监听TCP  
+   "udp://0.0.0.0:11010",  # UDP listener on port 11010 / 在11010端口监听UDP  
+   "wg://0.0.0.0:11011",   # WireGuard listener on port 11011 / 在11011端口监听WireGuard  
+   "ws://0.0.0.0:11011/",  # WebSocket listener / WebSocket监听器  
+   "wss://0.0.0.0:11012/"  # Secure WebSocket listener / 安全WebSocket监听器  
+]  
+ 
+# Peer connections - 对等节点连接  
+[[peer]]  
+uri = "tcp://public.easytier.top:11010"  # Public peer to connect initially / 最初要连接的公共对等节点  
+ 
+[[peer]]  
+uri = "udp://192.168.1.100:11010"        # Another peer connection / 另一个对等节点连接  
+ 
+# Exit nodes - 出口节点配置  
+exit_nodes = [  
+   "10.0.0.2",  # Exit node virtual IPv4 address / 出口节点虚拟IPv4地址  
+   "10.0.0.3"   # Secondary exit node / 备用出口节点  
+]  
+ 
+# RPC portal for management - 管理门户  
+rpc_portal = "0.0.0.0:15888"  # RPC portal address to listen for management / 用于管理的RPC门户地址  
+rpc_portal_whitelist = ["127.0.0.1/32", "::1/128"]  # RPC portal whitelist / RPC门户白名单  
+ 
+# Proxy networks - 代理网络配置  
+[[proxy_network]]  
+cidr = "192.168.0.0/24"  # Local network to export / 要导出的本地网络  
+allow = ["tcp", "udp", "icmp"]  # Allowed protocols / 允许的协议  
+ 
+[[proxy_network]]  
+cidr = "10.1.0.0/24->192.168.1.0/24"  # Network mapping / 网络映射  
+allow = ["tcp", "udp"]  # Allowed protocols for mapped network / 映射网络允许的协议  
+ 
+# Port forwarding - 端口转发  
+[[port_forward]]  
+bind_addr = "0.0.0.0:8080"      # Local bind address / 本地绑定地址  
+dst_addr = "10.0.0.100:80"      # Destination address in virtual network / 虚拟网络中的目标地址  
+proto = "tcp"                   # Protocol / 协议  
+ 
+[[port_forward]]  
+bind_addr = "0.0.0.0:53"        # DNS forward / DNS转发  
+dst_addr = "10.0.0.1:53"        # DNS server in VPN / VPN中的DNS服务器  
+proto = "udp"                   # UDP protocol / UDP协议  
+ 
+# Flags section - 标志配置  
+[flags]  
+default_protocol = "udp"                    # Default protocol for peer connections / 连接到对等节点时使用的默认协议  
+dev_name = "easytier0"                      # TUN interface name / TUN接口名称  
+enable_encryption = true                    # Enable encryption / 启用加密  
+encryption_algorithm = "aes-gcm"            # Encryption algorithm / 加密算法  
+enable_ipv6 = true                          # Enable IPv6 / 启用IPv6  
+mtu = 1380                                  # MTU size for TUN device / TUN设备的MTU  
+latency_first = false                       # Latency-first mode / 延迟优先模式  
+enable_exit_node = false                    # Allow this node to be an exit node / 允许此节点成为出口节点  
+no_tun = false                              # Create TUN device / 创建TUN设备  
+use_smoltcp = false                         # Enable smoltcp stack / 启用smoltcp堆栈  
+foreign_network_whitelist = "*"             # Foreign network whitelist / 外部网络白名单  
+disable_p2p = false                         # Disable P2P communication / 禁用P2P通信  
+p2p_only = false                            # Only communicate with P2P peers / 仅与P2P对等节点通信  
+relay_all_peer_rpc = false                  # Relay all peer RPC packets / 转发所有对等节点RPC数据包  
+disable_tcp_hole_punching = false           # Disable TCP hole punching / 禁用TCP打洞  
+disable_udp_hole_punching = false           # Disable UDP hole punching / 禁用UDP打洞  
+disable_sym_hole_punching = false           # Disable symmetric NAT hole punching / 禁用对称NAT打洞  
+multi_thread = true                         # Enable multi-threading / 启用多线程  
+multi_thread_count = 4                      # Number of threads / 线程数  
+compression = "none"                        # Compression algorithm / 压缩算法  
+enable_kcp_proxy = false                    # Enable KCP proxy / 启用KCP代理  
+disable_kcp_input = false                   # Disable KCP input / 禁用KCP输入  
+enable_quic_proxy = false                   # Enable QUIC proxy / 启用QUIC代理  
+disable_quic_input = false                  # Disable QUIC input / 禁用QUIC输入  
+bind_device = ""                            # Bind to physical device / 绑定到物理设备  
+proxy_forward_by_system = false             # Forward proxy via system kernel / 通过系统内核转发代理  
+accept_dns = false                          # Enable magic DNS / 启用魔法DNS  
+tld_dns_zone = "et.net"                    # Magic DNS top-level domain / 魔法DNS顶级域名  
+private_mode = false                        # Enable private mode / 启用私有模式  
+relay_network_whitelist = "*"               # Relay network whitelist / 中继网络白名单  
+foreign_relay_bps_limit = 0                 # Foreign relay BPS limit / 外部中继BPS限制  
+ 
+# Logging configuration - 日志配置  
+[console_logger]  
+level = "info"  # Console log level / 控制台日志级别  
+ 
+[file_logger]  
+level = "info"          # File log level / 文件日志级别  
+file = "easytier"       # Log file name / 日志文件名  
+dir = "/var/log/easytier"  # Log directory / 日志目录  
+ 
+# SOCKS5 proxy configuration - SOCKS5代理配置  
+socks5 = "1080"  # SOCKS5 server port / SOCKS5服务器端口  
+ 
+# STUN servers - STUN服务器配置  
+stun_servers = [  
+   "stun.l.google.com:19302",  
+   "stun1.l.google.com:19302"  
+]  
+ 
+stun_servers_v6 = [  
+   "stun.l.google.com:19302",  
+   "stun1.l.google.com:19302"  
+]  
+ 
+# Mapped listeners - 映射监听器  
+mapped_listeners = [  
+   "tcp://123.123.123.123:11010"  # Public address mapping / 公网地址映射  
+]  
+ 
+# Port whitelists - 端口白名单  
+tcp_whitelist = ["80", "443", "8000-9000"]  # TCP port whitelist / TCP端口白名单  
+udp_whitelist = ["53", "5000-6000"]         # UDP port whitelist / UDP端口白名单  
+ 
+# Manual routes - 手动路由  
+routes = [  
+   "192.168.100.0/24",  # Manual route CIDR / 手动路由CIDR  
+   "10.10.0.0/16"  
+]  
+ 
+# VPN portal configuration - VPN门户配置  
+[vpn_portal_config]  
+url = "wg://0.0.0.0:11010/10.14.14.0/24"  # VPN portal URL / VPN门户URL  
+ 
+# Secure mode configuration - 安全模式配置  
+[secure_mode]  
+enabled = false                    # Enable secure mode / 启用安全模式  
+private_key = ""                   # Local private key / 本地私钥  
+public_key = ""                    # Local public key / 本地公钥
